@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lanz3lot Mission Control // CYBERPUNK_V2.3</title>
+    <title>Lanz3lot Mission Control // v2.4</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,7 +16,6 @@
             --accent: #8b5cf6;
             --warning: #f59e0b;
             --text: #e0faff;
-            /* Increased translucency for glass effect */
             --card-bg: rgba(5, 15, 25, 0.75); 
             --glass-blur: blur(12px);
             --border-glow: 0 0 10px rgba(0, 242, 255, 0.4);
@@ -32,7 +31,6 @@
             min-height: 100vh;
         }
 
-        /* Overlay to darken background slightly for readability */
         body::before {
             content: '';
             position: fixed;
@@ -161,7 +159,7 @@
 
         .progress-block { width: 100%; text-align: center; }
         .progress-bar-bg { width: 100%; height: 12px; border: 1px solid var(--cyan); background: rgba(0, 242, 255, 0.1); margin-top: 10px; position: relative; padding: 2px; }
-        .progress-bar-fill { height: 100%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); position: relative; transition: width 1s ease-in-out; }
+        .progress-bar-fill { height: 100%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); position: relative; width: 0%; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
         
         /* Bottom Loading Bar */
         .bottom-loading { grid-column: span 3; height: 2px; background: rgba(255, 255, 255, 0.1); margin-top: 20px; position: relative; overflow: hidden; }
@@ -189,11 +187,11 @@
         .legend-item { display: flex; align-items: center; gap: 6px; }
         .dot { width: 8px; height: 8px; border-radius: 50%; }
 
-        /* JS Helper Classes */
         .completed { opacity: 0.3 !important; text-decoration: line-through; filter: grayscale(1); }
+        .night-duty { color: var(--warning); font-size: 12px; margin-top: 8px; font-weight: bold; text-transform: uppercase; }
     </style>
 </head>
-<body>
+<body onload="initDashboard()">
     <div class="container">
         <div class="header">
             <div class="subtitle">SYS_OPERATOR: PRASANNAKALYAN // TERMINAL_ACTIVE</div>
@@ -205,17 +203,17 @@
             <div class="panel full-width">
                 <span class="section-label" style="color: var(--success);">ACTIVE_TASKS // AUTO_GEN_0500</span>
                 <ul class="list">
-                    <li class="list-item todo-urgent" id="task-1">
+                    <li class="list-item todo-urgent" id="task-demo">
                         Demo by Weekend 
-                        <div class="checkbox" onclick="toggleTask('task-1', this)"></div>
+                        <div class="checkbox" id="check-demo" onclick="toggleTask('task-demo', 'check-demo')"></div>
                     </li>
-                    <li class="list-item todo-urgent" id="task-2">
+                    <li class="list-item todo-urgent" id="task-ppt">
                         Make PPT for Investors 
-                        <div class="checkbox" onclick="toggleTask('task-2', this)"></div>
+                        <div class="checkbox" id="check-ppt" onclick="toggleTask('task-ppt', 'check-ppt')"></div>
                     </li>
-                    <li class="list-item todo-fun" id="task-3">
+                    <li class="list-item todo-fun" id="task-enhance">
                         OpenClaw Dashboard Enhancement 
-                        <div class="checkbox" onclick="toggleTask('task-3', this)"></div>
+                        <div class="checkbox" id="check-enhance" onclick="toggleTask('task-enhance', 'check-enhance')"></div>
                     </li>
                 </ul>
             </div>
@@ -237,13 +235,13 @@
             <div class="panel" style="border-color: var(--blue); box-shadow: 0 0 15px rgba(0, 102, 255, 0.3);">
                 <span class="section-label" style="color: var(--blue);">CLINICAL_ROTATION // HUB_SYNC</span>
                 <div class="hud-container">
-                    <div class="spinning-orb">ENT</div>
+                    <div class="spinning-orb" id="rotation-orb">ENT</div>
                     <div class="progress-block">
-                        <div style="font-size: 12px; color: var(--cyan); letter-spacing: 1px;">ROTATION PROGRESS: FEB 23 - MAR 08</div>
+                        <div style="font-size: 12px; color: var(--cyan); letter-spacing: 1px;" id="rotation-range">ROTATION PROGRESS: FEB 23 - MAR 08</div>
                         <div class="progress-bar-bg">
-                            <div class="progress-bar-fill" style="width: 25%;"></div>
+                            <div class="progress-bar-fill" id="rotation-bar"></div>
                         </div>
-                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 5px;">DAY 3 / 14 // SYSTEM_NOMINAL</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 5px;" id="rotation-stats">CALCULATING_SYSTEM_TIME...</div>
                         <div class="night-duty">🌙 NEXT NIGHT: MAR 1 (SUN)</div>
                     </div>
                 </div>
@@ -273,21 +271,60 @@
                     <div class="legend-item"><div class="dot" style="background: var(--accent);"></div> WAIT</div>
                     <div class="legend-item"><div class="dot" style="background: var(--success);"></div> FUN</div>
                 </div>
-                <div style="color: var(--success); font-size: 12px; margin-top: 8px;">[●] SYSTEM_ONLINE // LANZ3LOT_v2.3</div>
+                <div style="color: var(--success); font-size: 12px; margin-top: 8px;">[●] SYSTEM_ONLINE // LANZ3LOT_v2.4</div>
             </div>
             <div style="font-size: 11px; color: var(--cyan); opacity: 0.5;">NODE_CONNECTED: PRASANNAKALYAN_LAPTOP</div>
         </div>
     </div>
 
     <script>
-        function toggleTask(id, cb) {
+        // --- 1. Persist Checkmarks ---
+        function toggleTask(id, checkId) {
             const item = document.getElementById(id);
+            const cb = document.getElementById(checkId);
             cb.classList.toggle('checked');
+            
             if (cb.classList.contains('checked')) {
                 item.classList.add('completed');
+                localStorage.setItem(id, 'done');
             } else {
                 item.classList.remove('completed');
+                localStorage.removeItem(id);
             }
+        }
+
+        // --- 2. Dynamic Rotation Logic ---
+        function initDashboard() {
+            // Load completion states
+            const tasks = ['task-demo', 'task-ppt', 'task-enhance'];
+            tasks.forEach(id => {
+                if (localStorage.getItem(id) === 'done') {
+                    document.getElementById(id).classList.add('completed');
+                    document.getElementById('check-' + id.split('-')[1]).classList.add('checked');
+                }
+            });
+
+            // Calculate Clinical Rotation
+            // Hardcoding start to midnight on the 23rd in local time
+            const startDate = new Date(2026, 1, 23, 0, 0, 0); // Feb 23, 2026
+            const endDate = new Date(2026, 2, 8, 23, 59, 59); // Mar 8, 2026
+            const today = new Date();
+            
+            // Difference in days: (Current Time - Start Time) / ms_per_day
+            const diffMs = today.getTime() - startDate.getTime();
+            const dayCount = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
+            
+            // Progress based on total duration (14 days)
+            const totalDays = 14;
+            const progressPercent = Math.min(Math.max((dayCount / totalDays) * 100, 0), 100);
+            
+            // Update UI
+            document.getElementById('rotation-bar').style.width = progressPercent + '%';
+            document.getElementById('rotation-stats').innerText = `DAY ${dayCount} / 14 // SYSTEM_NOMINAL`;
+            
+            console.log("Current Time: " + today.toISOString());
+            console.log("Start Time: " + startDate.toISOString());
+            console.log("Dashboard v2.4 initialized. Day: " + dayCount);
         }
     </script>
 </body>
