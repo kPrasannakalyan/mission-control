@@ -31,7 +31,8 @@
     "important_not_urgent": [
       { "text": "OpenClaw Cron Jobs & Skills Setup", "deadline": "2026-02-28" },
       { "text": "Stock Market App", "deadline": "2026-03-15" },
-      { "text": "The Odin Project", "deadline": "Ongoing" }
+      { "text": "The Odin Project", "deadline": "Ongoing" },
+      { "text": "Set up LinkedIn", "deadline": "TBD" }
     ],
     "fun_low_priority": [
       "Dashboard Updates",
