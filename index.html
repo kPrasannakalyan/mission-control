@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lanz3lot Mission Control // v2.4</title>
+    <title>Lanz3lot Mission Control // CYBERPUNK_V2.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -107,9 +107,21 @@
         .cat-fun::before { background: var(--success); box-shadow: 0 0 8px var(--success); }
 
         .todo-urgent::before { content: '🔴'; background: none; clip-path: none; width: auto; height: auto; font-size: 14px; }
+        .todo-wait::before { content: '🟣'; background: none; clip-path: none; width: auto; height: auto; font-size: 14px; }
         .todo-fun::before { content: '🟢'; background: none; clip-path: none; width: auto; height: auto; font-size: 14px; }
 
         .deadline { font-size: 11px; color: rgba(255, 255, 255, 0.5); margin-left: auto; }
+        .late-tag { 
+            color: var(--danger); 
+            font-size: 10px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            margin-left: 8px; 
+            border: 1px solid var(--danger); 
+            padding: 2px 4px; 
+            border-radius: 4px; 
+            box-shadow: 0 0 5px var(--danger);
+        }
 
         .checkbox { 
             margin-left: auto; 
@@ -201,19 +213,19 @@
         <div class="grid">
             <!-- TO DO TODAY -->
             <div class="panel full-width">
-                <span class="section-label" style="color: var(--success);">ACTIVE_TASKS // AUTO_GEN_0500</span>
+                <span class="section-label" style="color: var(--success);">ACTIVE_TASKS // UPDATED_2026_02_26_0621</span>
                 <ul class="list">
                     <li class="list-item todo-urgent" id="task-demo">
-                        Demo by Weekend 
+                        Demo by Weekend <span class="late-tag">LATE</span>
                         <div class="checkbox" id="check-demo" onclick="toggleTask('task-demo', 'check-demo')"></div>
                     </li>
                     <li class="list-item todo-urgent" id="task-ppt">
-                        Make PPT for Investors 
+                        Make PPT for Investors <span class="late-tag">LATE</span>
                         <div class="checkbox" id="check-ppt" onclick="toggleTask('task-ppt', 'check-ppt')"></div>
                     </li>
-                    <li class="list-item todo-fun" id="task-enhance">
-                        OpenClaw Dashboard Enhancement 
-                        <div class="checkbox" id="check-enhance" onclick="toggleTask('task-enhance', 'check-enhance')"></div>
+                    <li class="list-item todo-wait" id="task-review">
+                        All Hands Review Meeting
+                        <div class="checkbox" id="check-review" onclick="toggleTask('task-review', 'check-review')"></div>
                     </li>
                 </ul>
             </div>
@@ -255,7 +267,6 @@
                     <li class="list-item cat-wait">Cron Jobs & Skills <span class="deadline">Feb 28</span></li>
                     <li class="list-item cat-wait">Stock Market App <span class="deadline">Mar 15</span></li>
                     <li class="list-item cat-wait">The Odin Project <span class="deadline">Ongoing</span></li>
-                    <li class="list-item cat-fun">OpenClaw Dashboard Enhancement</li>
                     <li class="list-item cat-fun">Studying App</li>
                 </ul>
             </div>
@@ -271,14 +282,13 @@
                     <div class="legend-item"><div class="dot" style="background: var(--accent);"></div> WAIT</div>
                     <div class="legend-item"><div class="dot" style="background: var(--success);"></div> FUN</div>
                 </div>
-                <div style="color: var(--success); font-size: 12px; margin-top: 8px;">[●] SYSTEM_ONLINE // LANZ3LOT_v2.4</div>
+                <div style="color: var(--success); font-size: 12px; margin-top: 8px;">[●] SYSTEM_ONLINE // LANZ3LOT_v2.5</div>
             </div>
             <div style="font-size: 11px; color: var(--cyan); opacity: 0.5;">NODE_CONNECTED: PRASANNAKALYAN_LAPTOP</div>
         </div>
     </div>
 
     <script>
-        // --- 1. Persist Checkmarks ---
         function toggleTask(id, checkId) {
             const item = document.getElementById(id);
             const cb = document.getElementById(checkId);
@@ -293,38 +303,31 @@
             }
         }
 
-        // --- 2. Dynamic Rotation Logic ---
         function initDashboard() {
             // Load completion states
-            const tasks = ['task-demo', 'task-ppt', 'task-enhance'];
-            tasks.forEach(id => {
+            const currentTasks = ['task-demo', 'task-ppt', 'task-enhance', 'task-review'];
+            currentTasks.forEach(id => {
                 if (localStorage.getItem(id) === 'done') {
-                    document.getElementById(id).classList.add('completed');
-                    document.getElementById('check-' + id.split('-')[1]).classList.add('checked');
+                    const item = document.getElementById(id);
+                    if (item) {
+                        item.classList.add('completed');
+                        const checkId = 'check-' + id.split('-')[1];
+                        const check = document.getElementById(checkId);
+                        if (check) check.classList.add('checked');
+                    }
                 }
             });
 
-            // Calculate Clinical Rotation
-            // Hardcoding start to midnight on the 23rd in local time
-            const startDate = new Date(2026, 1, 23, 0, 0, 0); // Feb 23, 2026
-            const endDate = new Date(2026, 2, 8, 23, 59, 59); // Mar 8, 2026
+            // Calculate Clinical Rotation (respecting local timezone)
+            const startDate = new Date(2026, 1, 23, 0, 0, 0); 
             const today = new Date();
-            
-            // Difference in days: (Current Time - Start Time) / ms_per_day
             const diffMs = today.getTime() - startDate.getTime();
             const dayCount = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
-            
-            // Progress based on total duration (14 days)
             const totalDays = 14;
             const progressPercent = Math.min(Math.max((dayCount / totalDays) * 100, 0), 100);
             
-            // Update UI
             document.getElementById('rotation-bar').style.width = progressPercent + '%';
             document.getElementById('rotation-stats').innerText = `DAY ${dayCount} / 14 // SYSTEM_NOMINAL`;
-            
-            console.log("Current Time: " + today.toISOString());
-            console.log("Start Time: " + startDate.toISOString());
-            console.log("Dashboard v2.4 initialized. Day: " + dayCount);
         }
     </script>
 </body>

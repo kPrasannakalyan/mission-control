@@ -34,14 +34,13 @@
       { "text": "The Odin Project", "deadline": "Ongoing" }
     ],
     "fun_low_priority": [
-      "OpenClaw Dashboard Enhancement",
       "Studying App"
     ]
   },
   "todo_today": [
-    { "text": "Demo by Weekend", "priority": "urgent", "date_assigned": "2026-02-25" },
-    { "text": "Make PPT for Investors", "priority": "urgent", "date_assigned": "2026-02-25" },
-    { "text": "OpenClaw Dashboard Enhancement", "priority": "fun", "date_assigned": "2026-02-25" }
+    { "text": "Demo by Weekend", "priority": "urgent", "date_assigned": "2026-02-25", "late": true },
+    { "text": "Make PPT for Investors", "priority": "urgent", "date_assigned": "2026-02-25", "late": true },
+    { "text": "All Hands Review Meeting", "priority": "wait", "date_assigned": "2026-02-26" }
   ],
   "medical": {
     "rotation": "ENT",
