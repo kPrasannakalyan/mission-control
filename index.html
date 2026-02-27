@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lanz3lot Mission Control // CYBERPUNK_V2.5</title>
+    <title>Lanz3lot Mission Control // CYBERPUNK_V2.6</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -213,18 +213,18 @@
         <div class="grid">
             <!-- TO DO TODAY -->
             <div class="panel full-width">
-                <span class="section-label" style="color: var(--success);">ACTIVE_TASKS // UPDATED_2026_02_26_0621</span>
+                <span class="section-label" style="color: var(--success);">ACTIVE_TASKS // UPDATED_2026_02_26_0835</span>
                 <ul class="list">
                     <li class="list-item todo-urgent" id="task-demo-by-weekend">
-                        Demo by Weekend <span class='late-tag' style='color: var(--danger); font-size: 10px; border: 1px solid var(--danger); padding: 0 4px; margin-left: 8px;'>LATE</span>
+                        Demo by Weekend <span class="late-tag">LATE</span>
                         <div class="checkbox" id="check-demo-by-weekend" onclick="toggleTask('task-demo-by-weekend', 'check-demo-by-weekend')"></div>
                     </li>
                     <li class="list-item todo-urgent" id="task-make-ppt-for-investors">
-                        Make PPT for Investors <span class='late-tag' style='color: var(--danger); font-size: 10px; border: 1px solid var(--danger); padding: 0 4px; margin-left: 8px;'>LATE</span>
+                        Make PPT for Investors <span class="late-tag">LATE</span>
                         <div class="checkbox" id="check-make-ppt-for-investors" onclick="toggleTask('task-make-ppt-for-investors', 'check-make-ppt-for-investors')"></div>
                     </li>
-                    <li class="list-item todo-fun" id="task-all-hands-review-meeting">
-                        All Hands Review Meeting <span class='late-tag' style='color: var(--danger); font-size: 10px; border: 1px solid var(--danger); padding: 0 4px; margin-left: 8px;'>LATE</span>
+                    <li class="list-item todo-wait" id="task-all-hands-review-meeting">
+                        All Hands Review Meeting
                         <div class="checkbox" id="check-all-hands-review-meeting" onclick="toggleTask('task-all-hands-review-meeting', 'check-all-hands-review-meeting')"></div>
                     </li>
                 </ul>
@@ -233,4 +233,104 @@
             <!-- PALLIDEX BACKLOG -->
             <div class="panel">
                 <span class="section-label">PALLIDEX_BACKLOG // DATA_STREAM_A</span>
-                
+                <ul class="list">
+                    <li class="list-item cat-urgent">Demo by Weekend</li>
+                    <li class="list-item cat-urgent">Make PPT for Investors</li>
+                    <li class="list-item cat-wait">All Hands Review <span class="deadline">Feb 26</span></li>
+                    <li class="list-item cat-wait">Achievement Doc <span class="deadline">Feb 27</span></li>
+                    <li class="list-item cat-wait">Bank Account <span class="deadline">Mar 05</span></li>
+                    <li class="list-item cat-wait">Website & Branding <span class="deadline">Mar 10</span></li>
+                </ul>
+            </div>
+
+            <!-- CLINICAL STATUS (CENTERED) -->
+            <div class="panel" style="border-color: var(--blue); box-shadow: 0 0 15px rgba(0, 102, 255, 0.3);">
+                <span class="section-label" style="color: var(--blue);">CLINICAL_ROTATION // HUB_SYNC</span>
+                <div class="hud-container">
+                    <div class="spinning-orb" id="rotation-orb">ENT</div>
+                    <div class="progress-block">
+                        <div style="font-size: 12px; color: var(--cyan); letter-spacing: 1px;" id="rotation-range">ROTATION PROGRESS: FEB 23 - MAR 08</div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="rotation-bar"></div>
+                        </div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 5px;" id="rotation-stats">CALCULATING_SYSTEM_TIME...</div>
+                        <div class="night-duty">🌙 NEXT NIGHT: MAR 1 (SUN)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PERSONAL BACKLOG -->
+            <div class="panel" style="border-color: var(--magenta); box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);">
+                <span class="section-label" style="color: var(--magenta);">PERSONAL_ARCHIVE // DATA_STREAM_B</span>
+                <ul class="list">
+                    <li class="list-item cat-urgent">AI API Control</li>
+                    <li class="list-item cat-wait">Cron Jobs & Skills <span class="deadline">Feb 28</span></li>
+                    <li class="list-item cat-wait">Stock Market App <span class="deadline">Mar 15</span></li>
+                    <li class="list-item cat-wait">The Odin Project <span class="deadline">Ongoing</span></li>
+                    <li class="list-item cat-wait">Set up LinkedIn <span class="deadline">TBD</span></li>
+                    <li class="list-item cat-fun">Dashboard Updates</li>
+                    <li class="list-item cat-fun">Studying App</li>
+                </ul>
+            </div>
+
+            <!-- BOTTOM LOADING BAR -->
+            <div class="bottom-loading"></div>
+        </div>
+
+        <div class="footer">
+            <div>
+                <div class="legend">
+                    <div class="legend-item"><div class="dot" style="background: var(--danger);"></div> URGENT</div>
+                    <div class="legend-item"><div class="dot" style="background: var(--accent);"></div> WAIT</div>
+                    <div class="legend-item"><div class="dot" style="background: var(--success);"></div> FUN</div>
+                </div>
+                <div style="color: var(--success); font-size: 12px; margin-top: 8px;">[●] SYSTEM_ONLINE // LANZ3LOT_v2.6</div>
+            </div>
+            <div style="font-size: 11px; color: var(--cyan); opacity: 0.5;">NODE_CONNECTED: PRASANNAKALYAN_LAPTOP</div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTask(id, checkId) {
+            const item = document.getElementById(id);
+            const cb = document.getElementById(checkId);
+            cb.classList.toggle('checked');
+            
+            if (cb.classList.contains('checked')) {
+                item.classList.add('completed');
+                localStorage.setItem(id, 'done');
+            } else {
+                item.classList.remove('completed');
+                localStorage.removeItem(id);
+            }
+        }
+
+        function initDashboard() {
+            // Load completion states
+            const currentTasks = ['task-demo-by-weekend', 'task-make-ppt-for-investors', 'task-all-hands-review-meeting'];
+            currentTasks.forEach(id => {
+                if (localStorage.getItem(id) === 'done') {
+                    const item = document.getElementById(id);
+                    if (item) {
+                        item.classList.add('completed');
+                        const checkId = 'check-' + id.substring(5);
+                        const check = document.getElementById(checkId);
+                        if (check) check.classList.add('checked');
+                    }
+                }
+            });
+
+            // Calculate Clinical Rotation
+            const startDate = new Date(2026, 1, 23, 0, 0, 0); 
+            const today = new Date();
+            const diffMs = today.getTime() - startDate.getTime();
+            const dayCount = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
+            const totalDays = 14;
+            const progressPercent = Math.min(Math.max((dayCount / totalDays) * 100, 0), 100);
+            
+            document.getElementById('rotation-bar').style.width = progressPercent + '%';
+            document.getElementById('rotation-stats').innerText = `DAY ${dayCount} / 14 // SYSTEM_NOMINAL`;
+        }
+    </script>
+</body>
+</html>
